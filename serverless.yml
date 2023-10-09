@@ -1,0 +1,18 @@
+org: samartharoraa
+app: test-app
+service: aws-node-express-api-project
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  
+functions:
+  api:
+    handler: index.handler
+    events:
+      - httpApi: '*'
+    timeout: 900
+    environment:
+      OPENAI_API_KEY: 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
+
