@@ -11,8 +11,13 @@ functions:
   api:
     handler: index.handler
     events:
+      - http: 
+          path: /path
+          method: ANY
+          cors: true
       - httpApi: '*'
+     
+        
     timeout: 900
     environment:
-      OPENAI_API_KEY: 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
-
+      OPENAI_API_KEY: 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

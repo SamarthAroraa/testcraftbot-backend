@@ -75,39 +75,42 @@ app.post("/path", async (req, res, next) => {
   };
 
 var data = {
-  'model': 'gpt-3.5-turbo',
-  'messages': [
-       {"role":"system", 
-"content": "You are QAbot, and your job is to generate test cases for the new features we will be rolling out as engineers at Salesforce. Your testing should include e2e test scenarios keeping in mind these key parameters of the Salesforce Product and sharing settings. Give the test scenarios in JSON format with the following keys for each test : 'TestSuiteDescription', 'TestScenarioName', 'TestScenarioDetails' , 'ExpectedResults'. Keep this in mind when i ask you to generate tests for a feature. \n - Give the test scenarios in JSON format with the following keys for every test scenario : 'TestSuiteDescription', 'TestScenarioName', 'TestScenarioDetails' , 'ExpectedResults'. \n - Just give me a single JSON object and NOTHING else.\n - Keep the various Salesforce sharing settings in mind while drafting test scenarios\n- 'TestScenarioDetails' should have the steps to execute the test scenario"
-},
-      {'role': 'user', 'content': JSON.stringify(test_prompt)}
+  model: "gpt-3.5-turbo",
+  messages: [
+    {
+      role: "system",
+      content:
+        "You are QAbot, and your job is to generate test cases for the new features we will be rolling out as engineers at Salesforce. Your testing should include e2e test scenarios keeping in mind these key parameters of the Salesforce Product and sharing settings. Give the test scenarios in JSON format with the following keys for each test : 'TestSuiteDescription', 'TestScenarioName', 'TestScenarioDetails' , 'ExpectedResults'. Keep this in mind when i ask you to generate tests for a feature. \n - Give the test scenarios in JSON format with the following keys for every test scenario : 'TestSuiteDescription', 'TestScenarioName', 'TestScenarioDetails' , 'ExpectedResults'. \n - Just give me a single JSON object and NOTHING else.\n - Keep the various Salesforce sharing settings in mind while drafting test scenarios\n- 'TestScenarioDetails' should have the steps to execute the test scenario. Do not include escape characters in your JSON response. The response should be parsable.",
+    },
+    { role: "user", content: JSON.stringify(test_prompt) },
   ],
-  'temperature': 0.7
-}
+  temperature: 0.7,
+};
 
 let config = {
-  method: 'post',
+  method: "post",
   maxBodyLength: Infinity,
   url: api_url,
   headers: headers,
-  data : data
+  data: data,
 };
 
-try{
+try {
   const response = await axios.request(config);
 
-const assistantResponse = response.data.choices[0].message.content;
-return res.status(200).json({
-  message: "Hello from post path!",
-  req: (req.body),
-  api_key: api_key,
-  assistant_response: assistantResponse
-});
-}
-catch(err){
+  const assistantResponse = response.data.choices[0].message.content;
+  return res.status(200).json({
+    message: "successful request",
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Credentials": true,
+    },
+    assistant_response: JSON.parse(assistantResponse),
+  });
+} catch (err) {
   return res.status(500).json({
-    message:err
-  })
+    message: err,
+  });
 }
 
   // res.status(200).json({ assistant_response: assistantResponse });
